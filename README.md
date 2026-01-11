@@ -165,7 +165,7 @@ Serve as a portfolio project for internship applications
  Deployment
 
 👤 Author
-Snack Khoai Tây
+Tuan Le
 Aspiring Fullstack Developer
 
 📄 License

@@ -42,29 +42,28 @@ The project follows **production-oriented architecture** instead of a demo-only 
 
 ## 📁 Project Structure
 
+```text
 src/app
-├── store # Customer-facing pages
-│ ├── page.tsx
-│ ├── products
-│ ├── cart
-│ └── checkout
+├── store            # Customer-facing pages
+│   ├── page.tsx
+│   ├── products
+│   ├── cart
+│   └── checkout
 │
-├── admin # Admin dashboard
-│ ├── page.tsx
-│ ├── products
-│ └── orders
+├── admin            # Admin dashboard
+│   ├── page.tsx
+│   ├── products
+│   └── orders
 │
-├── auth # Authentication pages
-│ ├── login
-│ └── register
+├── auth             # Authentication pages
+│   ├── login
+│   └── register
 │
-├── api # Backend API routes
+├── api              # Backend API routes
 │
-├── page.tsx # Root redirect (/ → /store)
+├── page.tsx         # Root redirect (/ → /store)
 └── layout.tsx
 
-yaml
-Copy code
 
 Other important directories:
 

@@ -1,36 +1,173 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# My Aroma Atelier 🌿
 
-## Getting Started
+Production-ready **fullstack e-commerce web application** for a luxury fragrance brand.  
+This project is built as a **personal portfolio project** to demonstrate real-world
+fullstack development skills for internship opportunities.
 
-First, run the development server:
+---
 
+## ✨ Overview
+
+**My Aroma Atelier** is a modern web application for selling premium fragrances
+(candles, essential oils, perfumes) with a clear separation between:
+
+- Customer storefront
+- Authentication
+- Admin dashboard
+- Backend logic & database
+
+The project follows **production-oriented architecture** instead of a demo-only setup.
+
+---
+
+## 🧱 Tech Stack
+
+### Frontend
+- **Next.js (App Router)**
+- **TypeScript**
+- **Tailwind CSS**
+
+### Backend
+- **Next.js Server Actions / Route Handlers**
+- **Prisma ORM**
+- **PostgreSQL**
+
+### DevOps & Tooling
+- **Docker (PostgreSQL local)**
+- **Git & GitHub**
+- **PowerShell scripts for scaffolding**
+- **Production-ready folder structure**
+
+---
+
+## 📁 Project Structure
+
+src/app
+├── store # Customer-facing pages
+│ ├── page.tsx
+│ ├── products
+│ ├── cart
+│ └── checkout
+│
+├── admin # Admin dashboard
+│ ├── page.tsx
+│ ├── products
+│ └── orders
+│
+├── auth # Authentication pages
+│ ├── login
+│ └── register
+│
+├── api # Backend API routes
+│
+├── page.tsx # Root redirect (/ → /store)
+└── layout.tsx
+
+yaml
+Copy code
+
+Other important directories:
+
+prisma/ # Database schema & seed
+infra/ # Docker & infrastructure configs
+scripts/ # Project scaffolding scripts
+
+markdown
+Copy code
+
+---
+
+## 🚀 Features (Current & Planned)
+
+### ✅ Implemented
+- Production-ready Next.js App Router structure
+- Storefront routing (`/store`)
+- Admin routing (`/admin`)
+- Authentication routing (`/auth`)
+- GitHub-ready project setup
+- Clean commit history & roadmap
+
+### 🛠️ In Progress
+- Prisma schema & database migrations
+- Product & category seed data
+- Product listing from database
+- Admin product management
+
+### 🔮 Planned
+- Cart & checkout flow
+- Order management
+- Authentication & RBAC (Admin / Customer)
+- Deployment (Vercel + managed Postgres)
+
+---
+
+## 🗄️ Database (Planned)
+
+- **PostgreSQL**
+- **Prisma ORM**
+- Core entities:
+  - User
+  - Product
+  - Category
+  - Order
+  - OrderItem
+  - Cart
+
+---
+
+## 🧪 Local Development
+
+### 1️⃣ Install dependencies
 ```bash
+npm install
+2️⃣ Start development server
+bash
+Copy code
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+3️⃣ Open browser
+arduino
+Copy code
+http://localhost:3000
+🐳 Database (Docker – upcoming)
+PostgreSQL will be run locally using Docker for a production-like environment.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🎯 Project Goals
+Practice real-world fullstack architecture
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Apply clean folder structure & domain separation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Demonstrate ability to:
 
-## Learn More
+Design backend models
 
-To learn more about Next.js, take a look at the following resources:
+Integrate database with frontend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Use Git professionally
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Serve as a portfolio project for internship applications
 
-## Deploy on Vercel
+📌 Roadmap
+ Project scaffolding & routing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+ GitHub repository setup
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+ Prisma schema & migrations
+
+ Seed initial data
+
+ Store product listing
+
+ Admin product CRUD
+
+ Cart & checkout
+
+ Authentication & RBAC
+
+ Deployment
+
+👤 Author
+Snack Khoai Tây
+Aspiring Fullstack Developer
+
+📄 License
+This project is for educational and portfolio purposes.

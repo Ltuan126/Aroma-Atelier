@@ -1,184 +1,200 @@
-# My Aroma Atelier 🌿
+# 🌿 My Aroma Atelier
 
-Production-ready **fullstack e-commerce web application** for a luxury fragrance brand.  
-This project is built as a **personal portfolio project** for internship applications.
+A **production-oriented fullstack e-commerce system** designed to simulate real-world architecture and engineering practices.
+This project focuses on **scalability, clean architecture, and database-driven development**, going beyond a typical CRUD-based shop.
+
+Built as a **portfolio project for internship applications**, with an emphasis on demonstrating **engineering thinking, not just implementation**.
 
 ---
 
 ## 🧱 Tech Stack
 
-- **Next.js (App Router)**
-- **TypeScript**
-- **Tailwind CSS**
-- **Prisma ORM**
-- **PostgreSQL (Docker local)**
-- **Git & GitHub**
+* **Frontend**: Next.js (App Router)
+* **Language**: TypeScript
+* **Styling**: Tailwind CSS
+* **Backend**: Next.js Route Handlers
+* **ORM**: Prisma
+* **Database**: PostgreSQL (Docker local)
+* **Version Control**: Git & GitHub
+
+---
+
+## 🏗️ Architecture Overview
+
+### System Structure
+
+* `/store` → Customer-facing storefront
+* `/admin` → Admin management system
+* `/auth` → Authentication flow
+
+### Data Flow
+
+Client → Server (Next.js) → Prisma ORM → PostgreSQL
+
+### Key Design Decisions
+
+* **App Router** for scalable routing & layout control
+* **Prisma ORM** for type-safe database operations
+* **Separation of concerns** between store and admin domains
+* **Database-first approach** for backend design
+
+---
+
+## ⚡ Technical Highlights
+
+* Type-safe database access using Prisma
+* Modular folder structure for scalability
+* Clean separation between business domains
+* Prepared for Dockerized development environment
+* Git workflow with structured commit history
 
 ---
 
 ## 📁 Project Structure
 
-```markdown
-- **src/**: Contains the main application code.
-- **public/**: Static assets like images and fonts.
-- **prisma/**: Database schema and migrations.
-- **scripts/**: Utility scripts for project management.
-- **infra/**: Infrastructure as code files.
-- **docs/**: Documentation related to the project.
 ```
+src/        → Main application logic
+public/     → Static assets (images, fonts)
+prisma/     → Database schema & migrations
+scripts/    → Utility scripts
+infra/      → Infrastructure setup
+docs/       → Project documentation
+```
+
+---
+
+## 🚀 Features
+
+### 🛍️ Storefront *(planned)*
+
+* Product listing with category filtering
+* Dynamic product detail pages
+* Scalable routing structure
+
+### 🛠️ Admin Panel *(planned)*
+
+* Product management (CRUD)
+* Category management
+* Role-based access control (RBAC)
+
+### 🗄️ System
+
+* Relational database design
+* Prisma schema & migrations
+* Seed scripts for initial data
+
+---
+
+## 🗄️ Database Design
+
+Core entities:
+
+* User
+* Product
+* Category
+* Order
+* OrderItem
+* Cart
+
+Focus on:
+
+* Relationship modeling
+* Data consistency
+* Scalable schema design
 
 ---
 
 ## 🚀 Getting Started
 
-To get a local copy up and running follow these simple steps.
-
 ### Prerequisites
 
-- Node.js (v14 or later)
-- PostgreSQL
-- Docker (optional, for local database)
+* Node.js (v18.17+)
+* PostgreSQL
+* Docker (optional)
 
 ### Installation
 
-1. Clone the repo
-   ```bash
-   git clone https://github.com/yourusername/my-aroma-atelier.git
-   ```
-2. Install NPM packages
-   ```bash
-   npm install
-   ```
-3. Set up the database
-   ```bash
-   npx prisma migrate dev
-   ```
-4. Start the development server
-   ```bash
-   npm run dev
-   ```
-
----
-
-## 🚀 Features (Current & Planned)
-
-### ✅ Implemented
-
-- Production-ready Next.js App Router structure
-- Storefront routing (`/store`)
-- Admin routing (`/admin`)
-- Authentication routing (`/auth`)
-- GitHub-ready project setup
-- Clean commit history
-
-### 🛠️ In Progress
-
-- Prisma schema & database migrations
-- Product & category seed data
-- Product listing from database
-- Admin product management
-
-### 🔮 Planned
-
-- Cart & checkout flow
-- Order management
-- Authentication & RBAC (Admin / Customer)
-- Deployment (Vercel + managed Postgres)
-
-## 🗄️ Database (Planned)
-
-- **PostgreSQL**
-- **Prisma ORM**
-
-Core entities:
-- User
-- Product
-- Category
-- Order
-- OrderItem
-- Cart
-
-## 🧪 Local Development
-
-1️⃣ Install dependencies
 ```bash
+# Clone repository
+git clone https://github.com/Ltuan126/Aroma-Atelier.git
+
+# Install dependencies
 npm install
-```
 
-2️⃣ Start development server
-```bash
+# Setup database
+npx prisma migrate dev
+
+# Run development server
 npm run dev
 ```
 
-3️⃣ Open browser
-```bash
+Open:
+
+```
 http://localhost:3000
 ```
 
-🐳 Database (Docker – upcoming)
+---
 
-PostgreSQL will be run locally using Docker for a production-like environment.
+## 🧪 Local Development
 
-🎯 Project Goals
-
-- Practice real-world fullstack architecture
-- Apply clean folder structure & domain separation
-- Design backend models
-- Integrate database with frontend
-- Use Git professionally
-- Serve as a portfolio project for internship applications
-
-📌 Roadmap
-
-- Project scaffolding & routing
-- GitHub repository setup
-- Prisma schema & migrations
-- Seed initial data
-- Store product listing
-- Admin product CRUD
-- Cart & checkout
-- Authentication & RBAC
-- Deployment
+* Uses local PostgreSQL (Docker-ready)
+* Prisma handles schema migrations
+* Seed scripts for test data (upcoming)
 
 ---
 
-## 📖 Documentation
+## 🔮 Roadmap
 
-For detailed documentation, please refer to the [docs](docs/) folder.
+* [x] Project structure & routing
+* [x] Repository setup
+* [ ] Prisma schema & migrations
+* [ ] Seed initial data
+* [ ] Product listing from database
+* [ ] Admin CRUD system
+* [ ] Cart & checkout flow
+* [ ] Authentication & RBAC
+* [ ] Deployment (Vercel + managed DB)
 
 ---
 
-## 🤝 Contributing
+## 🎯 Learning Focus
 
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+This project emphasizes:
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+* Fullstack architecture design
+* Database modeling & relationships
+* Clean code organization
+* Data flow understanding
+* Real-world project structure
+
+---
+
+## 📸 Future Improvements
+
+* Add system architecture diagram
+* Add UI screenshots
+* Deploy live demo
+* Integrate caching layer (Redis)
+* Add logging & monitoring
 
 ---
 
 ## 📄 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+MIT License
 
 ---
 
 ## 📫 Contact
 
-Tuan Nguyen Le - [tuanlenguyen612@gmail.com](mailto:tuanlenguyen612@gmail.com)
+**Tuan Nguyen Le**
+📧 [tuanlenguyen612@gmail.com](mailto:tuanlenguyen612@gmail.com)
 
-Project Link: [https://github.com/Ltuan126/Aroma-Atelier](https://github.com/Ltuan126/Aroma-Atelier)
+GitHub: https://github.com/Ltuan126/Aroma-Atelier
 
 ---
 
 ## 👤 Author
 
-Tuan Nguyen Le 
-Aspiring Fullstack Developer
-
-📄 License
-
-This project is for educational and portfolio purposes.
+Aspiring Fullstack Developer focused on building **production-ready systems** and improving **software engineering fundamentals**.

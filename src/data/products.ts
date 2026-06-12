@@ -81,3 +81,51 @@ export const MOCK_PRODUCTS: Product[] = [
 export function getFeaturedProducts(count = 4): Product[] {
   return MOCK_PRODUCTS.slice(0, count);
 }
+
+export function getProductDisplay(imageKey: string | null) {
+  const displays: Record<string, { imageGrad: string; tag: string; icon: string }> = {
+    p1: {
+      imageGrad: "from-teal-200 to-emerald-100 dark:from-teal-950 dark:to-emerald-900",
+      tag: "Best Seller",
+      icon: "🧪",
+    },
+    p2: {
+      imageGrad: "from-amber-200 to-orange-100 dark:from-amber-950 dark:to-orange-900",
+      tag: "Mới nhất",
+      icon: "💧",
+    },
+    p3: {
+      imageGrad: "from-indigo-200 to-violet-100 dark:from-indigo-950 dark:to-violet-900",
+      tag: "Giới hạn",
+      icon: "🕯️",
+    },
+    p4: {
+      imageGrad: "from-rose-200 to-amber-100 dark:from-rose-950 dark:to-rose-900",
+      tag: "Độc quyền",
+      icon: "🧪",
+    },
+    p5: {
+      imageGrad: "from-yellow-200 to-amber-100 dark:from-yellow-950 dark:to-amber-900",
+      tag: "Mới nhất",
+      icon: "💧",
+    },
+    p6: {
+      imageGrad: "from-emerald-200 to-teal-100 dark:from-emerald-950 dark:to-teal-900",
+      tag: "Cơ bản",
+      icon: "🕯️",
+    },
+  };
+
+  return displays[imageKey || ""] || {
+    imageGrad: "from-zinc-200 to-zinc-100 dark:from-zinc-800 dark:to-zinc-900",
+    tag: "Sản phẩm",
+    icon: "✨",
+  };
+}
+
+export function formatPrice(price: number): string {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "decimal",
+  }).format(price) + "đ";
+}
+

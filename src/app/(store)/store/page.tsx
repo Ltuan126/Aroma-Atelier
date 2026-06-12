@@ -1,9 +1,20 @@
 import React from "react";
 import Link from "next/link";
-import { getFeaturedProducts } from "@/data/products";
+import { prisma } from "@/lib/prisma";
+import { getProductDisplay, formatPrice } from "@/data/products";
 
-export default function StoreHomePage() {
-  const featuredProducts = getFeaturedProducts(4);
+export default async function StoreHomePage() {
+  const featuredProducts = await prisma.product.findMany({
+    take: 4,
+    orderBy: { createdAt: "desc" },
+    include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
 
 
   return (
@@ -105,40 +116,45 @@ export default function StoreHomePage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredProducts.map((p) => (
-            <div
-              key={p.id}
-              className="bg-white dark:bg-zinc-900/40 border border-zinc-200/50 dark:border-zinc-800/50 rounded-2xl overflow-hidden hover:shadow-lg hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300 flex flex-col group"
-            >
-              {/* Product Image Placeholder */}
-              <div className={`h-64 bg-gradient-to-tr ${p.imageGrad} relative flex items-center justify-center p-6 transition-all duration-300`}>
-                <span className="text-4xl filter drop-shadow-md group-hover:scale-115 transition-transform duration-500">🧪</span>
-                <span className="absolute top-4 left-4 bg-white/90 dark:bg-zinc-900/90 border border-zinc-200/20 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
-                  {p.tag}
-                </span>
-              </div>
+          {featuredProducts.map((p) => {
+            const display = getProductDisplay(p.image);
+            return (
+              <div
+                key={p.id}
+                className="bg-white dark:bg-zinc-900/40 border border-zinc-200/50 dark:border-zinc-800/50 rounded-2xl overflow-hidden hover:shadow-lg hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300 flex flex-col group"
+              >
+                {/* Product Image Placeholder */}
+                <div className={`h-64 bg-gradient-to-tr ${display.imageGrad} relative flex items-center justify-center p-6 transition-all duration-300`}>
+                  <span className="text-4xl filter drop-shadow-md group-hover:scale-115 transition-transform duration-500">
+                    {display.icon}
+                  </span>
+                  <span className="absolute top-4 left-4 bg-white/90 dark:bg-zinc-900/90 border border-zinc-200/20 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
+                    {display.tag}
+                  </span>
+                </div>
 
-              {/* Product Info */}
-              <div className="p-5 flex-grow flex flex-col justify-between space-y-4">
-                <div className="space-y-1">
-                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest">
-                    {p.category}
-                  </span>
-                  <h3 className="font-serif font-bold text-base text-zinc-800 dark:text-zinc-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200 line-clamp-1">
-                    {p.name}
-                  </h3>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm">
-                    {p.price}
-                  </span>
-                  <button className="h-8 px-3 rounded-lg text-xs font-semibold text-white bg-zinc-900 dark:bg-zinc-800 hover:bg-emerald-600 dark:hover:bg-emerald-600 shadow-sm transition-all duration-200">
-                    Thêm vào giỏ
-                  </button>
+                {/* Product Info */}
+                <div className="p-5 flex-grow flex flex-col justify-between space-y-4">
+                  <div className="space-y-1">
+                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest">
+                      {p.category.name}
+                    </span>
+                    <h3 className="font-serif font-bold text-base text-zinc-800 dark:text-zinc-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200 line-clamp-1">
+                      {p.name}
+                    </h3>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm">
+                      {formatPrice(p.price)}
+                    </span>
+                    <button className="h-8 px-3 rounded-lg text-xs font-semibold text-white bg-zinc-900 dark:bg-zinc-800 hover:bg-emerald-600 dark:hover:bg-emerald-600 shadow-sm transition-all duration-200">
+                      Thêm vào giỏ
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 

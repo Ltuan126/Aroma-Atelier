@@ -21,7 +21,7 @@ export default function AdminDashboardPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white font-serif">Tổng Quan Hệ Thống</h1>
-          <p className="text-xs text-zinc-555 text-zinc-400 mt-1">Cập nhật lúc: 15:30 - 08/06/2026</p>
+          <p className="text-xs text-zinc-400 mt-1">Cập nhật lúc: {new Date().toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit", year: "numeric" })}</p>
         </div>
         <div className="flex items-center gap-3">
           <button className="h-9 px-4 text-xs font-semibold bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 rounded-xl transition-all duration-200">
@@ -75,7 +75,7 @@ export default function AdminDashboardPage() {
                 {recentOrders.map((order) => (
                   <tr key={order.id} className="hover:bg-zinc-900/30 transition-colors">
                     <td className="py-4 px-6 font-semibold text-zinc-200">{order.id}</td>
-                    <td className="py-4 px-6 text-zinc-350 text-zinc-300">{order.customer}</td>
+                    <td className="py-4 px-6 text-zinc-300">{order.customer}</td>
                     <td className="py-4 px-6 text-zinc-400">{order.date}</td>
                     <td className="py-4 px-6 text-right font-medium text-zinc-200">{order.total}</td>
                     <td className="py-4 px-6 text-center">

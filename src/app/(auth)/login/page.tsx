@@ -34,7 +34,7 @@ export default function LoginPage() {
               type="email"
               placeholder="example@domain.com"
               required
-              className="w-full px-4 h-11 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-850 focus:border-emerald-500 focus:outline-none text-sm rounded-xl transition-all duration-200"
+              className="w-full px-4 h-11 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 focus:border-emerald-500 focus:outline-none text-sm rounded-xl transition-all duration-200"
             />
           </div>
 
@@ -49,7 +49,7 @@ export default function LoginPage() {
               type="password"
               placeholder="••••••••"
               required
-              className="w-full px-4 h-11 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-855 focus:border-emerald-500 focus:outline-none text-sm rounded-xl transition-all duration-200"
+              className="w-full px-4 h-11 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 focus:border-emerald-500 focus:outline-none text-sm rounded-xl transition-all duration-200"
             />
           </div>
 
@@ -72,7 +72,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <button className="w-full h-11 border border-zinc-200 dark:border-zinc-850 hover:bg-zinc-55 hover:bg-zinc-100 dark:hover:bg-zinc-950 text-sm font-semibold flex items-center justify-center space-x-2 rounded-xl transition-all duration-200">
+          <button className="w-full h-11 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-950 text-sm font-semibold flex items-center justify-center space-x-2 rounded-xl transition-all duration-200">
             {/* Simple Google SVG Icon */}
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />

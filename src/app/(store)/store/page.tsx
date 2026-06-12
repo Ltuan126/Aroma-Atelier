@@ -1,41 +1,10 @@
 import React from "react";
 import Link from "next/link";
+import { getFeaturedProducts } from "@/data/products";
 
 export default function StoreHomePage() {
-  const featuredProducts = [
-    {
-      id: "p1",
-      name: "Sương Mai - Eau de Parfum",
-      category: "Nước hoa cao cấp",
-      price: "1,250,000đ",
-      imageGrad: "from-teal-200 to-emerald-100 dark:from-teal-950 dark:to-emerald-900",
-      tag: "Best Seller",
-    },
-    {
-      id: "p2",
-      name: "Hoàng Hôn - Pure Essential Oil",
-      category: "Tinh dầu tự nhiên",
-      price: "450,000đ",
-      imageGrad: "from-amber-200 to-orange-100 dark:from-amber-950 dark:to-orange-900",
-      tag: "Mới nhất",
-    },
-    {
-      id: "p3",
-      name: "Đêm Đông - Scented Candle",
-      category: "Nến thơm nghệ thuật",
-      price: "380,000đ",
-      imageGrad: "from-indigo-200 to-violet-100 dark:from-indigo-950 dark:to-violet-900",
-      tag: "Giới hạn",
-    },
-    {
-      id: "p4",
-      name: "Gió Ngàn - Eau de Parfum",
-      category: "Nước hoa cao cấp",
-      price: "1,180,000đ",
-      imageGrad: "from-rose-200 to-amber-100 dark:from-rose-950 dark:to-amber-900",
-      tag: "Độc quyền",
-    },
-  ];
+  const featuredProducts = getFeaturedProducts(4);
+
 
   return (
     <div className="space-y-16 pb-20">

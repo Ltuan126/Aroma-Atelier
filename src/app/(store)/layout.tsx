@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import HeaderActions from "@/components/layout/HeaderActions";
 
 export default function StoreLayout({
   children,
@@ -48,44 +49,7 @@ export default function StoreLayout({
           </nav>
 
           {/* Action Icons */}
-          <div className="flex items-center space-x-4">
-            {/* Search Button (Visual Only) */}
-            <button className="p-2 text-zinc-600 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-all duration-200" aria-label="Search">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </button>
-
-            {/* Cart Button */}
-            <Link
-              href="#"
-              className="p-2 relative text-zinc-600 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-all duration-200"
-              aria-label="Cart"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
-              <span className="absolute -top-1 -right-1 bg-emerald-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                0
-              </span>
-            </Link>
-
-            {/* Admin Portal Link */}
-            <Link
-              href="/admin/dashboard"
-              className="hidden sm:inline-flex items-center space-x-1 text-xs font-semibold px-3 h-8 border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500 hover:text-emerald-600 dark:hover:border-emerald-500 dark:hover:text-emerald-400 rounded-full transition-all duration-200"
-            >
-              <span>Quản trị</span>
-            </Link>
-
-            {/* User Profile / Login */}
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center px-4 h-9 text-sm font-medium text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-md shadow-emerald-900/10 hover:shadow-emerald-950/20 active:scale-95 rounded-full transition-all duration-200"
-            >
-              Đăng nhập
-            </Link>
-          </div>
+          <HeaderActions />
         </div>
       </header>
 

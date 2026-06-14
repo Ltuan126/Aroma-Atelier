@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useCart } from "@/components/providers/CartProvider";
 
 interface AddToCartButtonProps {
   product: {
@@ -12,22 +15,37 @@ interface AddToCartButtonProps {
 }
 
 export default function AddToCartButton({ product }: AddToCartButtonProps) {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const { addToCart } = useCart();
+
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const isOutOfStock = product.stock === 0;
 
   const handleAddToCart = async () => {
     if (isOutOfStock || loading) return;
+    setError(null);
+
+    // Kiểm tra đăng nhập
+    if (!session) {
+      router.push(`/login?callbackUrl=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+
     setLoading(true);
-
-    // TODO: Connect to real cart API when cart feature is built
-    await new Promise((resolve) => setTimeout(resolve, 600));
-
+    const result = await addToCart(product.id, quantity);
     setLoading(false);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2500);
+
+    if (result.success) {
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2500);
+    } else {
+      setError(result.error || "Có lỗi xảy ra khi thêm vào giỏ hàng");
+    }
   };
 
   return (
@@ -118,6 +136,13 @@ export default function AddToCartButton({ product }: AddToCartButtonProps) {
           </svg>
         </button>
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <p className="text-xs text-red-500 font-medium mt-1 animate-pulse">
+          ⚠️ {error}
+        </p>
+      )}
     </div>
   );
 }

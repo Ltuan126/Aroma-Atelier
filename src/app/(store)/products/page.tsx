@@ -5,6 +5,8 @@ import { Prisma } from "@prisma/client";
 import { getProductDisplay, formatPrice } from "@/data/products";
 import SortSelect from "@/components/products/SortSelect";
 
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   searchParams: Promise<{
     category?: string;
@@ -178,19 +180,21 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                     key={p.id}
                     className="bg-white dark:bg-zinc-900/40 border border-zinc-200/50 dark:border-zinc-800/50 rounded-2xl overflow-hidden hover:shadow-lg hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300 flex flex-col group"
                   >
-                    {/* Image */}
-                    <div className={`h-56 bg-gradient-to-tr ${display.imageGrad} relative flex items-center justify-center p-6 transition-all duration-300`}>
-                      <span className="text-4xl filter drop-shadow-md group-hover:scale-110 transition-transform duration-500">
-                        {display.icon}
-                      </span>
-                      <span className="absolute top-4 left-4 bg-white/90 dark:bg-zinc-900/90 border border-zinc-200/20 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
-                        {display.tag}
-                      </span>
-                    </div>
+                    {/* Image — click to detail */}
+                    <Link href={`/products/${p.slug}`} className="block">
+                      <div className={`h-56 bg-gradient-to-tr ${display.imageGrad} relative flex items-center justify-center p-6 transition-all duration-300`}>
+                        <span className="text-4xl filter drop-shadow-md group-hover:scale-110 transition-transform duration-500">
+                          {display.icon}
+                        </span>
+                        <span className="absolute top-4 left-4 bg-white/90 dark:bg-zinc-900/90 border border-zinc-200/20 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
+                          {display.tag}
+                        </span>
+                      </div>
+                    </Link>
 
                     {/* Info */}
                     <div className="p-5 flex-grow flex flex-col justify-between space-y-4">
-                      <div className="space-y-1">
+                      <Link href={`/products/${p.slug}`} className="space-y-1 block">
                         <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest">
                           {p.category.name}
                         </span>
@@ -200,14 +204,17 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                         <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-2 mt-1 min-h-[2rem]">
                           {p.description || "Chưa có mô tả chi tiết."}
                         </p>
-                      </div>
+                      </Link>
                       <div className="flex items-center justify-between pt-2">
                         <span className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm">
                           {formatPrice(p.price)}
                         </span>
-                        <button className="h-8 px-3 rounded-lg text-xs font-semibold text-white bg-zinc-900 dark:bg-zinc-800 hover:bg-emerald-600 dark:hover:bg-emerald-600 shadow-sm transition-all duration-200">
-                          Thêm vào giỏ
-                        </button>
+                        <Link
+                          href={`/products/${p.slug}`}
+                          className="h-8 px-3 rounded-lg text-xs font-semibold text-white bg-zinc-900 dark:bg-zinc-800 hover:bg-emerald-600 dark:hover:bg-emerald-600 shadow-sm transition-all duration-200 inline-flex items-center"
+                        >
+                          Xem chi tiết
+                        </Link>
                       </div>
                     </div>
                   </div>

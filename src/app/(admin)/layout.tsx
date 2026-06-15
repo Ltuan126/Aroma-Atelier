@@ -1,11 +1,38 @@
 import React from "react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(authOptions);
+
+  // Kiểm tra đăng nhập
+  if (!session || !session.user) {
+    redirect("/login?callbackUrl=" + encodeURIComponent("/admin/dashboard"));
+  }
+
+  // Kiểm tra quyền ADMIN
+  const role = (session.user as any).role;
+  if (role !== "ADMIN") {
+    redirect("/store");
+  }
+
+  const adminName = session.user.name || "Aroma Admin";
+  const adminEmail = session.user.email || "admin@aroma.com";
+  
+  // Lấy chữ cái đầu của tên
+  const adminInitials = adminName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
   return (
     <div className="min-h-screen flex bg-zinc-950 text-zinc-100 font-sans antialiased">
       {/* Sidebar - Permanent on desktop */}
@@ -24,7 +51,7 @@ export default function AdminLayout({
         <nav className="flex-grow p-4 space-y-1">
           {[
             { name: "Tổng quan", href: "/admin/dashboard", icon: "📊" },
-            { name: "Sản phẩm", href: "#", icon: "🧪" },
+            { name: "Sản phẩm", href: "/admin/products", icon: "🧪" },
             { name: "Đơn hàng", href: "#", icon: "📦" },
             { name: "Khách hàng", href: "#", icon: "👥" },
             { name: "Cài đặt", href: "#", icon: "⚙️" },
@@ -33,9 +60,9 @@ export default function AdminLayout({
               key={idx}
               href={item.href}
               className={`flex items-center space-x-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
-                idx === 0
+                item.href === "/admin/dashboard"
                   ? "bg-emerald-600/10 text-emerald-400 border border-emerald-500/25"
-                  : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50"
+                  : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 border border-transparent"
               }`}
             >
               <span className="text-base">{item.icon}</span>
@@ -48,11 +75,11 @@ export default function AdminLayout({
         <div className="p-4 border-t border-zinc-800/80">
           <div className="flex items-center space-x-3 p-2 bg-zinc-900/80 border border-zinc-800/50 rounded-2xl">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center font-bold text-white shadow-md">
-              TN
+              {adminInitials}
             </div>
             <div className="flex-grow min-w-0">
-              <p className="text-xs font-semibold text-zinc-200 truncate">Tuan Nguyen</p>
-              <p className="text-[10px] text-zinc-500 truncate">Administrator</p>
+              <p className="text-xs font-semibold text-zinc-200 truncate">{adminName}</p>
+              <p className="text-[10px] text-zinc-500 truncate">{adminEmail}</p>
             </div>
           </div>
         </div>
@@ -69,7 +96,7 @@ export default function AdminLayout({
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <h2 className="text-sm font-bold tracking-wider uppercase text-zinc-450">Hệ Thống Quản Trị</h2>
+            <h2 className="text-sm font-bold tracking-wider uppercase text-zinc-400">Hệ Thống Quản Trị</h2>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -100,3 +127,4 @@ export default function AdminLayout({
     </div>
   );
 }
+

@@ -201,7 +201,18 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
           {/* Quantity + Add to Cart */}
           <div className="space-y-4">
-            <AddToCartButton product={{ id: product.id, name: product.name, price: product.price, stock: product.stock }} />
+            <AddToCartButton product={{
+              id: product.id,
+              name: product.name,
+              slug: product.slug,
+              description: product.description,
+              price: product.price,
+              stock: product.stock,
+              image: product.image,
+              categoryId: product.categoryId,
+              createdAt: product.createdAt.toISOString(),
+              updatedAt: product.updatedAt.toISOString(),
+            }} />
           </div>
 
           {/* Divider */}

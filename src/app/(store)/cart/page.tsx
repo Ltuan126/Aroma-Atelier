@@ -23,33 +23,13 @@ export default function CartPage() {
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push(`/login?callbackUrl=${encodeURIComponent("/cart")}`);
-    }
-  }, [status, router]);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   if (status === "loading") {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex flex-col items-center justify-center">
         <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4" />
         <p className="text-zinc-500 dark:text-zinc-400 font-medium text-sm">Đang tải giỏ hàng...</p>
-      </div>
-    );
-  }
-
-  if (status === "unauthenticated") {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex flex-col items-center justify-center">
-        <p className="text-zinc-500 dark:text-zinc-400 font-medium mb-4 text-sm">Vui lòng đăng nhập để xem giỏ hàng</p>
-        <Link
-          href="/login?callbackUrl=/cart"
-          className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold transition-colors shadow-md shadow-emerald-900/10"
-        >
-          Đăng nhập ngay
-        </Link>
       </div>
     );
   }
@@ -80,6 +60,13 @@ export default function CartPage() {
 
   const handleCheckout = async () => {
     if (items.length === 0 || checkoutLoading) return;
+    
+    // Kiểm tra đăng nhập khi thanh toán
+    if (status !== "authenticated") {
+      setShowLoginModal(true);
+      return;
+    }
+
     setCheckoutLoading(true);
     setError(null);
 
@@ -324,6 +311,43 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+
+      {/* Login Prompt Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-6 text-center space-y-5 animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto text-lg">
+              🔐
+            </div>
+            <div className="space-y-2">
+              <h3 className="font-serif text-base font-bold text-white">Yêu cầu Đăng nhập</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Vui lòng đăng nhập hoặc đăng ký tài khoản mới để tiến hành thanh toán và dễ dàng theo dõi đơn hàng của bạn.
+              </p>
+            </div>
+            <div className="flex flex-col gap-2 pt-2">
+              <Link
+                href={`/login?callbackUrl=${encodeURIComponent("/cart")}`}
+                className="h-10 w-full flex items-center justify-center rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 transition-all duration-200 shadow-md shadow-emerald-900/10"
+              >
+                Đăng nhập ngay
+              </Link>
+              <Link
+                href={`/register?callbackUrl=${encodeURIComponent("/cart")}`}
+                className="h-10 w-full flex items-center justify-center rounded-xl text-xs font-semibold text-zinc-300 bg-zinc-950 border border-zinc-800 hover:bg-zinc-800 transition-all duration-200"
+              >
+                Đăng ký tài khoản mới
+              </Link>
+              <button
+                onClick={() => setShowLoginModal(false)}
+                className="h-9 w-full text-xs font-medium text-zinc-500 hover:text-zinc-300 transition-colors pt-1"
+              >
+                Quay lại giỏ hàng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

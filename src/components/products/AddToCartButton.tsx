@@ -9,14 +9,18 @@ interface AddToCartButtonProps {
   product: {
     id: string;
     name: string;
+    slug: string;
+    description: string | null;
     price: number;
     stock: number;
+    image: string | null;
+    categoryId: string;
+    createdAt: string;
+    updatedAt: string;
   };
 }
 
 export default function AddToCartButton({ product }: AddToCartButtonProps) {
-  const { data: session } = useSession();
-  const router = useRouter();
   const { addToCart } = useCart();
 
   const [quantity, setQuantity] = useState(1);
@@ -30,14 +34,8 @@ export default function AddToCartButton({ product }: AddToCartButtonProps) {
     if (isOutOfStock || loading) return;
     setError(null);
 
-    // Kiểm tra đăng nhập
-    if (!session) {
-      router.push(`/login?callbackUrl=${encodeURIComponent(window.location.pathname)}`);
-      return;
-    }
-
     setLoading(true);
-    const result = await addToCart(product.id, quantity);
+    const result = await addToCart(product.id, quantity, product);
     setLoading(false);
 
     if (result.success) {

@@ -113,12 +113,20 @@ export default function CartPage() {
             </span>
           </div>
         )}
-        <Link
-          href="/products"
-          className="inline-flex items-center justify-center px-6 h-12 text-xs font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-md shadow-emerald-900/10 rounded-xl transition-all duration-200"
-        >
-          Tiếp tục mua sắm
-        </Link>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Link
+            href="/orders"
+            className="inline-flex items-center justify-center px-6 h-12 text-xs font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-md shadow-emerald-900/10 rounded-xl transition-all duration-200"
+          >
+            Xem đơn hàng của bạn
+          </Link>
+          <Link
+            href="/products"
+            className="inline-flex items-center justify-center px-6 h-12 text-xs font-semibold text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700 rounded-xl transition-all duration-200"
+          >
+            Tiếp tục mua sắm
+          </Link>
+        </div>
       </div>
     );
   }

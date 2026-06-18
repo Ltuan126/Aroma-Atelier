@@ -52,7 +52,7 @@ export default async function AdminLayout({
           {[
             { name: "Tổng quan", href: "/admin/dashboard", icon: "📊" },
             { name: "Sản phẩm", href: "/admin/products", icon: "🧪" },
-            { name: "Đơn hàng", href: "#", icon: "📦" },
+            { name: "Đơn hàng", href: "/admin/orders", icon: "📦" },
             { name: "Khách hàng", href: "#", icon: "👥" },
             { name: "Cài đặt", href: "#", icon: "⚙️" },
           ].map((item, idx) => (

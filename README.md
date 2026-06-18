@@ -65,21 +65,30 @@ docs/       → Project documentation
 
 ## 🚀 Features
 
-### 🛍️ Storefront *(planned)*
+### 🛍️ Storefront
 
 * Product listing with category filtering
 * Dynamic product detail pages
-* Scalable routing structure
+* Guest cart (LocalStorage) with database sync on login
+* Full checkout flow with stock validation
+* Order history & tracking page
 
-### 🛠️ Admin Panel *(planned)*
+### 🛠️ Admin Panel
 
+* Dashboard with real-time statistics
 * Product management (CRUD)
-* Category management
+* Order management with status lifecycle (PENDING → PROCESSING → SHIPPED → DELIVERED / CANCELLED)
 * Role-based access control (RBAC)
+
+### 🔐 Authentication
+
+* User registration & login (NextAuth + Credentials)
+* Role-based route protection (ADMIN / CUSTOMER)
+* Guest cart → DB sync on authentication
 
 ### 🗄️ System
 
-* Relational database design
+* Relational database design (User, Product, Category, Order, Cart)
 * Prisma schema & migrations
 * Seed scripts for initial data
 
@@ -148,12 +157,16 @@ http://localhost:3000
 
 * [x] Project structure & routing
 * [x] Repository setup
-* [ ] Prisma schema & migrations
-* [ ] Seed initial data
-* [ ] Product listing from database
-* [ ] Admin CRUD system
-* [ ] Cart & checkout flow
-* [ ] Authentication & RBAC
+* [x] Prisma schema & migrations
+* [x] Seed initial data
+* [x] Product listing from database
+* [x] Admin CRUD system
+* [x] Cart & checkout flow
+* [x] Authentication & RBAC
+* [x] Order tracking & management
+* [ ] Customer management (Admin)
+* [ ] Search & advanced filtering
+* [ ] Payment integration
 * [ ] Deployment (Vercel + managed DB)
 
 ---

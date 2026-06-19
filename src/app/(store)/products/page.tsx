@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { getProductDisplay, formatPrice } from "@/data/products";
 import SortSelect from "@/components/products/SortSelect";
+import SearchInput from "@/components/products/SearchInput";
+import PriceRangeFilter from "@/components/products/PriceRangeFilter";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +14,9 @@ interface PageProps {
     category?: string;
     sort?: string;
     price?: string;
+    search?: string;
+    minPrice?: string;
+    maxPrice?: string;
   }>;
 }
 
@@ -27,6 +32,9 @@ export default async function ProductsPage({ searchParams }: PageProps) {
   const currentCategory = resolvedSearchParams.category || "all";
   const currentSort = resolvedSearchParams.sort || "default";
   const currentPrice = resolvedSearchParams.price || "all";
+  const currentSearch = resolvedSearchParams.search || "";
+  const minPrice = resolvedSearchParams.minPrice || "";
+  const maxPrice = resolvedSearchParams.maxPrice || "";
 
   // Fetch categories from DB
   const categories = await prisma.category.findMany({
@@ -42,8 +50,24 @@ export default async function ProductsPage({ searchParams }: PageProps) {
     };
   }
 
+  // Text search
+  if (currentSearch) {
+    where.OR = [
+      { name: { contains: currentSearch, mode: "insensitive" } },
+      { description: { contains: currentSearch, mode: "insensitive" } },
+    ];
+  }
+
   // Price filtering
-  if (currentPrice === "under_500") {
+  if (minPrice || maxPrice) {
+    where.price = {};
+    if (minPrice) {
+      where.price.gte = parseFloat(minPrice);
+    }
+    if (maxPrice) {
+      where.price.lte = parseFloat(maxPrice);
+    }
+  } else if (currentPrice === "under_500") {
     where.price = { lt: 500000 };
   } else if (currentPrice === "500_1000") {
     where.price = { gte: 500000, lte: 1000000 };
@@ -75,7 +99,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
     },
   });
 
-  // Helper to build URL search params
+  // Helper to build URL search params for category/price/sort links
   const buildUrl = (params: { category?: string; sort?: string; price?: string }) => {
     const newParams = new URLSearchParams();
     
@@ -89,9 +113,24 @@ export default async function ProductsPage({ searchParams }: PageProps) {
       newParams.set("sort", sortVal);
     }
 
+    if (currentSearch) {
+      newParams.set("search", currentSearch);
+    }
+
+    // If static price is selected, we clear custom price ranges
     const priceVal = params.price !== undefined ? params.price : currentPrice;
-    if (priceVal && priceVal !== "all") {
-      newParams.set("price", priceVal);
+    if (params.price !== undefined) {
+      if (priceVal && priceVal !== "all") {
+        newParams.set("price", priceVal);
+      }
+    } else {
+      // If we clicked category or sort, we preserve whatever filters are active
+      if (priceVal && priceVal !== "all") {
+        newParams.set("price", priceVal);
+      } else {
+        if (minPrice) newParams.set("minPrice", minPrice);
+        if (maxPrice) newParams.set("maxPrice", maxPrice);
+      }
     }
 
     const queryStr = newParams.toString();
@@ -148,7 +187,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                   key={filter.value}
                   href={buildUrl({ price: filter.value })}
                   className={`text-sm py-1.5 px-3 rounded-lg transition-all duration-200 ${
-                    currentPrice === filter.value
+                    currentPrice === filter.value && !minPrice && !maxPrice
                       ? "font-semibold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400"
                       : "text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400"
                   }`}
@@ -158,10 +197,18 @@ export default async function ProductsPage({ searchParams }: PageProps) {
               ))}
             </div>
           </div>
+
+          {/* Custom Price Range Filter */}
+          <PriceRangeFilter />
         </aside>
 
         {/* Product Grid and Sorting */}
         <div className="flex-grow space-y-6">
+          {/* Search bar and Filters header */}
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            <SearchInput />
+          </div>
+
           {/* Sorting and Count */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white dark:bg-zinc-900/20 border border-zinc-200/50 dark:border-zinc-800/50 px-4 py-3 rounded-xl text-sm">
             <span className="text-zinc-500 dark:text-zinc-400 font-medium">
@@ -225,7 +272,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             <div className="text-center py-20 bg-white dark:bg-zinc-900/10 border border-zinc-200/50 dark:border-zinc-800/50 rounded-2xl">
               <span className="text-4xl">🍃</span>
               <h3 className="mt-4 text-base font-semibold text-zinc-700 dark:text-zinc-350">Không tìm thấy sản phẩm</h3>
-              <p className="mt-1 text-sm text-zinc-555 dark:text-zinc-400">Thử thay đổi bộ lọc hoặc xem toàn bộ cửa hàng.</p>
+              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-450">Thử thay đổi bộ lọc hoặc xem toàn bộ cửa hàng.</p>
               <Link
                 href="/products"
                 className="mt-6 inline-flex h-10 items-center justify-center px-6 rounded-full text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-500 transition-colors duration-200"

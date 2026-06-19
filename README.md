@@ -164,9 +164,9 @@ http://localhost:3000
 * [x] Cart & checkout flow
 * [x] Authentication & RBAC
 * [x] Order tracking & management
-* [ ] Customer management (Admin)
-* [ ] Search & advanced filtering
-* [ ] Payment integration
+* [x] Customer management (Admin)
+* [x] Search & advanced filtering
+* [x] Payment integration
 * [ ] Deployment (Vercel + managed DB)
 
 ---

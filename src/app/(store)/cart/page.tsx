@@ -78,9 +78,8 @@ export default function CartPage() {
       if (!res.ok) {
         throw new Error(data.error || "Có lỗi xảy ra trong quá trình đặt hàng");
       }
-      setOrderId(data.orderId);
-      setCheckoutSuccess(true);
-      refreshCart(); // Reset giỏ hàng client sau khi đặt hàng thành công
+      refreshCart(); // Reset giỏ hàng client
+      router.push(`/checkout/payment/${data.orderId}`);
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Đặt hàng không thành công, vui lòng thử lại.");

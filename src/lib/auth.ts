@@ -26,6 +26,10 @@ export const authOptions: AuthOptions = {
           throw new Error("Tài khoản không tồn tại.");
         }
 
+        if (user.isBlocked) {
+          throw new Error("Tài khoản của bạn đã bị khóa.");
+        }
+
         const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
 
         if (!isPasswordValid) {

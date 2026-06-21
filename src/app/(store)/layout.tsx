@@ -29,19 +29,19 @@ export default function StoreLayout({
               Cửa hàng
             </Link>
             <Link
-              href="#"
+              href="/collections"
               className="text-zinc-600 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200"
             >
               Bộ sưu tập
             </Link>
             <Link
-              href="#"
+              href="/about"
               className="text-zinc-600 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200"
             >
               Câu chuyện
             </Link>
             <Link
-              href="#"
+              href="/contact"
               className="text-zinc-600 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200"
             >
               Liên hệ
@@ -73,19 +73,19 @@ export default function StoreLayout({
             <div>
               <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 mb-4">Sản phẩm</h3>
               <ul className="space-y-2 text-xs text-zinc-500 dark:text-zinc-400">
-                <li><Link href="#" className="hover:text-emerald-600 dark:hover:text-emerald-400">Nước hoa cao cấp</Link></li>
-                <li><Link href="#" className="hover:text-emerald-600 dark:hover:text-emerald-400">Tinh dầu tự nhiên</Link></li>
-                <li><Link href="#" className="hover:text-emerald-600 dark:hover:text-emerald-400">Nến thơm nghệ thuật</Link></li>
-                <li><Link href="#" className="hover:text-emerald-600 dark:hover:text-emerald-400">Quà tặng đặc biệt</Link></li>
+                <li><Link href="/products?category=nuoc-hoa-cao-cap" className="hover:text-emerald-600 dark:hover:text-emerald-400">Nước hoa cao cấp</Link></li>
+                <li><Link href="/products?category=tinh-dau-tu-nhien" className="hover:text-emerald-600 dark:hover:text-emerald-400">Tinh dầu tự nhiên</Link></li>
+                <li><Link href="/products?category=nen-thom-nghe-thuat" className="hover:text-emerald-600 dark:hover:text-emerald-400">Nến thơm nghệ thuật</Link></li>
+                <li><Link href="/products" className="hover:text-emerald-600 dark:hover:text-emerald-400">Quà tặng đặc biệt</Link></li>
               </ul>
             </div>
             <div>
               <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-zinc-200 mb-4">Hỗ trợ khách hàng</h3>
               <ul className="space-y-2 text-xs text-zinc-500 dark:text-zinc-400">
-                <li><Link href="#" className="hover:text-emerald-600 dark:hover:text-emerald-400">Chính sách vận chuyển</Link></li>
-                <li><Link href="#" className="hover:text-emerald-600 dark:hover:text-emerald-400">Chính sách đổi trả</Link></li>
-                <li><Link href="#" className="hover:text-emerald-600 dark:hover:text-emerald-400">Câu hỏi thường gặp</Link></li>
-                <li><Link href="#" className="hover:text-emerald-600 dark:hover:text-emerald-400">Hướng dẫn chọn mùi hương</Link></li>
+                <li><Link href="/about" className="hover:text-emerald-600 dark:hover:text-emerald-400">Chính sách vận chuyển</Link></li>
+                <li><Link href="/about" className="hover:text-emerald-600 dark:hover:text-emerald-400">Chính sách đổi trả</Link></li>
+                <li><Link href="/contact" className="hover:text-emerald-600 dark:hover:text-emerald-400">Câu hỏi thường gặp</Link></li>
+                <li><Link href="/contact" className="hover:text-emerald-600 dark:hover:text-emerald-400">Hướng dẫn chọn mùi hương</Link></li>
               </ul>
             </div>
             <div>

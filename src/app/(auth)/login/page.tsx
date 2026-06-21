@@ -84,7 +84,7 @@ export default function LoginPage() {
           <div className="space-y-1">
             <div className="flex justify-between items-center">
               <label className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Mật khẩu</label>
-              <Link href="#" className="text-xs text-emerald-600 dark:text-emerald-400 hover:underline">
+              <Link href="/contact" className="text-xs text-emerald-600 dark:text-emerald-400 hover:underline">
                 Quên mật khẩu?
               </Link>
             </div>

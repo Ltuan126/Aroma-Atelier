@@ -60,7 +60,7 @@ export default async function StoreHomePage() {
               Mua ngay
             </Link>
             <Link
-              href="#"
+              href="/about"
               className="w-full sm:w-auto inline-flex items-center justify-center px-8 h-12 font-medium border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-all duration-200"
             >
               Tìm hiểu thêm

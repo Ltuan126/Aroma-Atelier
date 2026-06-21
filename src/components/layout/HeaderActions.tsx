@@ -88,7 +88,7 @@ export default function HeaderActions() {
               </div>
               <div className="py-1">
                 <Link
-                  href="#"
+                  href="/orders"
                   onClick={() => setIsOpen(false)}
                   className="flex px-4 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                 >

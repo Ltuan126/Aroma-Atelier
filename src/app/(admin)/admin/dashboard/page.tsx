@@ -16,8 +16,8 @@ function getOrderStatusDisplay(status: string) {
 }
 
 export default async function AdminDashboardPage() {
-  // 1. Tính doanh thu (Tổng tiền các đơn hàng khác CANCELLED)
-  const orders = await prisma.order.findMany({
+  // 1. Fetch all orders (except CANCELLED) to aggregate details in JS
+  const allOrders = await prisma.order.findMany({
     where: {
       status: {
         not: "CANCELLED",
@@ -25,11 +25,22 @@ export default async function AdminDashboardPage() {
     },
     select: {
       totalAmount: true,
+      paymentStatus: true,
+      paymentMethod: true,
+      createdAt: true,
     },
   });
-  const totalRevenue = orders.reduce((sum, o) => sum + o.totalAmount, 0);
 
-  // 2. Tính đơn hàng đang xử lý (PENDING hoặc PROCESSING)
+  // Calculate stats
+  const totalPaidRevenue = allOrders
+    .filter((o) => o.paymentStatus === "PAID")
+    .reduce((sum, o) => sum + o.totalAmount, 0);
+
+  const pendingRevenue = allOrders
+    .filter((o) => o.paymentStatus !== "PAID")
+    .reduce((sum, o) => sum + o.totalAmount, 0);
+
+  // 2. Orders needing processing
   const pendingOrdersCount = await prisma.order.count({
     where: {
       status: {
@@ -38,17 +49,54 @@ export default async function AdminDashboardPage() {
     },
   });
 
-  // 3. Tính tổng số sản phẩm
-  const totalProductsCount = await prisma.product.count();
-
-  // 4. Tính số lượng khách hàng mới (User có role CUSTOMER)
+  // 3. Registered customers count
   const totalCustomersCount = await prisma.user.count({
     where: {
       role: "CUSTOMER",
     },
   });
 
-  // 5. Lấy danh sách 5 đơn hàng gần đây
+  // 4. Payment Method Revenue Breakdown
+  const stripeRevenue = allOrders
+    .filter((o) => o.paymentMethod === "STRIPE")
+    .reduce((sum, o) => sum + o.totalAmount, 0);
+
+  const qrRevenue = allOrders
+    .filter((o) => o.paymentMethod === "QR")
+    .reduce((sum, o) => sum + o.totalAmount, 0);
+
+  const codRevenue = allOrders
+    .filter((o) => o.paymentMethod === "COD")
+    .reduce((sum, o) => sum + o.totalAmount, 0);
+
+  const totalRevenueAll = allOrders.reduce((sum, o) => sum + o.totalAmount, 0);
+
+  // 5. Calculate Last 7 Days Sales for Visual Bar Chart
+  const salesByDay: Record<string, number> = {};
+  const dayNames = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+  const last7Days = Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    const formatted = d.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" });
+    const dayLabel = dayNames[d.getDay()];
+    return {
+      key: d.toDateString(),
+      label: `${dayLabel} (${formatted})`,
+      amount: 0,
+    };
+  });
+
+  allOrders.forEach((o) => {
+    const oDate = new Date(o.createdAt).toDateString();
+    const dayObj = last7Days.find((d) => d.key === oDate);
+    if (dayObj) {
+      dayObj.amount += o.totalAmount;
+    }
+  });
+
+  const maxDailySales = Math.max(...last7Days.map((d) => d.amount), 1);
+
+  // 6. Get Top 5 Recent Orders
   const dbRecentOrders = await prisma.order.findMany({
     take: 5,
     orderBy: {
@@ -70,12 +118,15 @@ export default async function AdminDashboardPage() {
       customer: o.user.name || "Khách hàng",
       date: new Date(o.createdAt).toLocaleDateString("vi-VN"),
       total: formatPrice(o.totalAmount),
+      paymentMethod: o.paymentMethod === "STRIPE" ? "Stripe" : o.paymentMethod === "QR" ? "QR Code" : "COD",
+      paymentStatus: o.paymentStatus === "PAID" ? "Đã thanh toán" : "Chờ thanh toán",
+      paymentStatusColor: o.paymentStatus === "PAID" ? "text-emerald-400 border-emerald-500/20 bg-emerald-500/10" : "text-amber-400 border-amber-500/20 bg-amber-500/10",
       status: statusInfo.label,
       statusColor: statusInfo.color,
     };
   });
 
-  // 6. Tính sản phẩm bán chạy (nhóm theo productId trong OrderItem)
+  // 7. Top Selling Products
   const topSold = await prisma.orderItem.groupBy({
     by: ["productId"],
     _sum: {
@@ -105,7 +156,6 @@ export default async function AdminDashboardPage() {
       })
     );
   } else {
-    // Dự phòng nếu chưa có lượt mua nào: Lấy 3 sản phẩm đầu tiên
     const defaultProds = await prisma.product.findMany({
       take: 3,
       include: { category: true },
@@ -118,10 +168,10 @@ export default async function AdminDashboardPage() {
   }
 
   const stats = [
-    { title: "Tổng doanh thu thực", value: formatPrice(totalRevenue), change: "Tất cả đơn hàng hợp lệ", trend: "up" },
-    { title: "Đơn hàng cần xử lý", value: `${pendingOrdersCount} đơn`, change: "Chờ thanh toán & chuẩn bị", trend: "up" },
-    { title: "Danh mục sản phẩm", value: `${totalProductsCount} sản phẩm`, change: "Có trong cơ sở dữ liệu", trend: "neutral" },
-    { title: "Khách hàng đăng ký", value: `${totalCustomersCount} khách`, change: "Tài khoản CUSTOMER", trend: "up" },
+    { title: "Doanh thu (Đã thanh toán)", value: formatPrice(totalPaidRevenue), change: "Thanh toán thành công qua cổng Stripe/QR", trend: "up", color: "text-emerald-400" },
+    { title: "Doanh thu chưa thu (COD/Treo)", value: formatPrice(pendingRevenue), change: "Khách chọn COD hoặc chưa hoàn tất QR", trend: "neutral", color: "text-amber-400" },
+    { title: "Đơn hàng cần xử lý", value: `${pendingOrdersCount} đơn`, change: "Trạng thái Chờ xử lý / Đang chuẩn bị", trend: "up", color: "text-blue-400" },
+    { title: "Khách hàng đăng ký", value: `${totalCustomersCount} khách`, change: "Tổng số tài khoản CUSTOMER", trend: "up", color: "text-zinc-200" },
   ];
 
   return (
@@ -142,9 +192,6 @@ export default async function AdminDashboardPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="h-9 px-4 text-xs font-semibold bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 rounded-xl transition-all duration-200">
-            Xuất báo cáo
-          </button>
           <a
             href="/admin/products"
             className="inline-flex items-center justify-center h-9 px-4 text-xs font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 rounded-xl shadow-lg shadow-emerald-900/20 active:scale-95 transition-all duration-200"
@@ -163,13 +210,105 @@ export default async function AdminDashboardPage() {
           >
             <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{stat.title}</p>
             <div className="flex items-baseline justify-between">
-              <span className="text-xl font-bold text-white tracking-tight">{stat.value}</span>
+              <span className={`text-xl font-bold tracking-tight ${stat.color}`}>{stat.value}</span>
             </div>
             <p className="text-[10px] font-semibold text-zinc-500">
               {stat.change}
             </p>
           </div>
         ))}
+      </div>
+
+      {/* Charts & Breakdown Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Column 1: Last 7 Days Sales Chart (Col span 2) */}
+        <div className="lg:col-span-2 bg-zinc-900/20 border border-zinc-800/80 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+          <div className="flex justify-between items-center border-b border-zinc-800/80 pb-4">
+            <div>
+              <h3 className="font-serif font-bold text-base text-white">Doanh số 7 ngày qua</h3>
+              <p className="text-[10px] text-zinc-500">Tổng giá trị đơn hàng được tạo theo từng ngày</p>
+            </div>
+          </div>
+
+          {/* Visual CSS-based Bar Chart */}
+          <div className="flex items-end justify-between h-48 pt-4 px-2">
+            {last7Days.map((day, idx) => {
+              const percentage = (day.amount / maxDailySales) * 100;
+              return (
+                <div key={idx} className="flex flex-col items-center space-y-2 group w-full">
+                  <div className="relative w-full flex justify-center">
+                    {/* Tooltip on Hover */}
+                    <span className="absolute bottom-full mb-2 hidden group-hover:block bg-zinc-950 text-white text-[9px] font-bold px-2 py-1 rounded-md border border-zinc-800 whitespace-nowrap shadow-xl">
+                      {formatPrice(day.amount)}
+                    </span>
+                    {/* The Bar */}
+                    <div
+                      style={{ height: `${Math.max(percentage, 4)}%` }}
+                      className={`w-8 rounded-t-lg transition-all duration-500 cursor-pointer ${
+                        day.amount > 0
+                          ? "bg-gradient-to-t from-emerald-600 to-teal-500 group-hover:from-emerald-500 group-hover:to-teal-400 shadow-md shadow-emerald-950/20"
+                          : "bg-zinc-800/50"
+                      }`}
+                    />
+                  </div>
+                  <span className="text-[9px] font-semibold text-zinc-500 group-hover:text-zinc-300 transition-colors">
+                    {day.label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Column 2: Payment Method Breakdown */}
+        <div className="bg-zinc-900/20 border border-zinc-800/80 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+          <div className="border-b border-zinc-800/80 pb-4">
+            <h3 className="font-serif font-bold text-base text-white">Cơ cấu thanh toán</h3>
+            <p className="text-[10px] text-zinc-500">Tỷ lệ doanh thu theo các phương thức</p>
+          </div>
+
+          <div className="space-y-5 flex-grow justify-center flex flex-col">
+            {[
+              {
+                name: "Thẻ Tín Dụng (Stripe)",
+                amount: stripeRevenue,
+                color: "bg-indigo-500",
+                textColor: "text-indigo-400",
+                percentage: totalRevenueAll > 0 ? (stripeRevenue / totalRevenueAll) * 100 : 0,
+              },
+              {
+                name: "Ví Điện Tử (QR Code)",
+                amount: qrRevenue,
+                color: "bg-emerald-500",
+                textColor: "text-emerald-400",
+                percentage: totalRevenueAll > 0 ? (qrRevenue / totalRevenueAll) * 100 : 0,
+              },
+              {
+                name: "Thanh Toán Khi Nhận (COD)",
+                amount: codRevenue,
+                color: "bg-amber-500",
+                textColor: "text-amber-400",
+                percentage: totalRevenueAll > 0 ? (codRevenue / totalRevenueAll) * 100 : 0,
+              },
+            ].map((method, idx) => (
+              <div key={idx} className="space-y-2">
+                <div className="flex justify-between text-xs font-medium">
+                  <span className="text-zinc-300">{method.name}</span>
+                  <span className={`font-semibold ${method.textColor}`}>{formatPrice(method.amount)}</span>
+                </div>
+                <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+                  <div
+                    style={{ width: `${method.percentage}%` }}
+                    className={`h-full rounded-full transition-all duration-500 ${method.color}`}
+                  />
+                </div>
+                <div className="flex justify-end text-[9px] text-zinc-500 font-semibold">
+                  {method.percentage.toFixed(1)}%
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Tables Section */}
@@ -192,7 +331,8 @@ export default async function AdminDashboardPage() {
                   <tr className="border-b border-zinc-800 text-[10px] font-bold uppercase tracking-wider text-zinc-500 bg-zinc-950/20">
                     <th className="py-3 px-6">Mã đơn</th>
                     <th className="py-3 px-6">Khách hàng</th>
-                    <th className="py-3 px-6">Ngày đặt</th>
+                    <th className="py-3 px-6">Phương thức</th>
+                    <th className="py-3 px-6">Thanh toán</th>
                     <th className="py-3 px-6 text-right">Tổng cộng</th>
                     <th className="py-3 px-6 text-center">Trạng thái</th>
                   </tr>
@@ -202,7 +342,12 @@ export default async function AdminDashboardPage() {
                     <tr key={order.id} className="hover:bg-zinc-900/30 transition-colors">
                       <td className="py-4 px-6 font-mono font-semibold text-emerald-400">{order.id}</td>
                       <td className="py-4 px-6 text-zinc-300 font-medium">{order.customer}</td>
-                      <td className="py-4 px-6 text-zinc-400">{order.date}</td>
+                      <td className="py-4 px-6 text-zinc-400">{order.paymentMethod}</td>
+                      <td className="py-4 px-6">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold border ${order.paymentStatusColor}`}>
+                          {order.paymentStatus}
+                        </span>
+                      </td>
                       <td className="py-4 px-6 text-right font-medium text-zinc-200">{order.total}</td>
                       <td className="py-4 px-6 text-center">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-bold border ${order.statusColor}`}>
@@ -221,6 +366,7 @@ export default async function AdminDashboardPage() {
         <div className="bg-zinc-900/20 border border-zinc-800/80 rounded-2xl p-6 flex flex-col justify-between">
           <div className="border-b border-zinc-800/80 pb-4 mb-4">
             <h3 className="font-serif font-bold text-base text-white">Sản phẩm bán chạy nhất</h3>
+            <p className="text-[10px] text-zinc-500">Xếp hạng theo tổng số lượng bán ra</p>
           </div>
           <div className="space-y-4 flex-grow">
             {topProductsList.map((p, idx) => (

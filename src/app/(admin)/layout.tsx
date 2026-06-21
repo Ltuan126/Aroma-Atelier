@@ -54,7 +54,6 @@ export default async function AdminLayout({
             { name: "Sản phẩm", href: "/admin/products", icon: "🧪" },
             { name: "Đơn hàng", href: "/admin/orders", icon: "📦" },
             { name: "Khách hàng", href: "/admin/customers", icon: "👥" },
-            { name: "Cài đặt", href: "#", icon: "⚙️" },
           ].map((item, idx) => (
             <Link
               key={idx}

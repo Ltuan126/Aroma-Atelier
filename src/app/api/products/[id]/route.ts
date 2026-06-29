@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
 type Context = {
   params: Promise<{
@@ -15,7 +16,7 @@ export async function PATCH(request: NextRequest, { params }: Context) {
     const session = await getServerSession(authOptions);
 
     // Kiểm tra quyền ADMIN
-    if (!session || (session.user as any).role !== "ADMIN") {
+    if (!session || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -23,7 +24,7 @@ export async function PATCH(request: NextRequest, { params }: Context) {
     const { name, slug, description, price, stock, image, categoryId } = body;
 
     // Build đối tượng cập nhật dữ liệu động
-    const updateData: any = {};
+    const updateData: Prisma.ProductUncheckedUpdateInput = {};
     if (name !== undefined) updateData.name = name;
     if (slug !== undefined) updateData.slug = slug;
     if (description !== undefined) updateData.description = description;
@@ -67,7 +68,7 @@ export async function PATCH(request: NextRequest, { params }: Context) {
     });
 
     return NextResponse.json({ success: true, data: updatedProduct });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error updating product:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
@@ -82,7 +83,7 @@ export async function DELETE(request: NextRequest, { params }: Context) {
     const session = await getServerSession(authOptions);
 
     // Kiểm tra quyền ADMIN
-    if (!session || (session.user as any).role !== "ADMIN") {
+    if (!session || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -92,10 +93,10 @@ export async function DELETE(request: NextRequest, { params }: Context) {
     });
 
     return NextResponse.json({ success: true, message: "Đã xóa sản phẩm thành công" });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error deleting product:", error);
     // Nếu có ràng buộc khóa ngoại (ví dụ: đã có người đặt mua sản phẩm này)
-    if (error.code === "P2003") {
+    if (error && typeof error === "object" && "code" in error && error.code === "P2003") {
       return NextResponse.json(
         { error: "Không thể xóa sản phẩm này vì đã có trong các đơn hàng đã đặt của hệ thống." },
         { status: 400 }

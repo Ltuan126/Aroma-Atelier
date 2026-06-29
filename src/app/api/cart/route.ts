@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
     if (!userId) {
       return NextResponse.json({ error: "User ID not found in session" }, { status: 400 });
     }
@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({ cart });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Cart GET error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
     if (!userId) {
       return NextResponse.json({ error: "User ID not found in session" }, { status: 400 });
     }
@@ -147,7 +147,7 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ cart: updatedCart });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Cart POST error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }

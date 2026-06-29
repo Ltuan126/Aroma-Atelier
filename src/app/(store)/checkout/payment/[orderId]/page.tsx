@@ -39,7 +39,7 @@ export default async function PaymentPage({ params }: PageProps) {
   }
 
   // Đảm bảo chỉ chủ nhân đơn hàng mới xem được trang này
-  if (order.userId !== (session.user as any).id) {
+  if (order.userId !== session.user.id) {
     redirect("/store");
   }
 

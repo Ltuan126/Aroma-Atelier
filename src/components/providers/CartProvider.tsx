@@ -91,7 +91,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         try {
           const localItemsRaw = localStorage.getItem("aroma_guest_cart");
           if (localItemsRaw) {
-            const localItems = JSON.parse(localItemsRaw);
+            const localItems = JSON.parse(localItemsRaw) as Array<{ productId: string; quantity: number }>;
             if (localItems.length > 0) {
               // Gửi yêu cầu đồng bộ lên máy chủ
               const syncRes = await fetch("/api/cart/sync", {
@@ -100,7 +100,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  items: localItems.map((item: any) => ({
+                  items: localItems.map((item) => ({
                     productId: item.productId,
                     quantity: item.quantity,
                   })),

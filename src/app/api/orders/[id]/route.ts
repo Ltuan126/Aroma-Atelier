@@ -14,8 +14,8 @@ export async function GET(
     }
 
     const { id } = await params;
-    const userId = (session.user as any).id;
-    const role = (session.user as any).role;
+    const userId = session.user.id;
+    const role = session.user.role;
 
     const order = await prisma.order.findUnique({
       where: { id },

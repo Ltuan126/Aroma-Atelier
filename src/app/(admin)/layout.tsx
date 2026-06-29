@@ -17,7 +17,7 @@ export default async function AdminLayout({
   }
 
   // Kiểm tra quyền ADMIN
-  const role = (session.user as any).role;
+  const role = session.user.role;
   if (role !== "ADMIN") {
     redirect("/store");
   }

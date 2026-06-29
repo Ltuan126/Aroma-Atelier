@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
 
     // Lấy giỏ hàng cùng các item
     const cart = await prisma.cart.findUnique({
@@ -96,10 +96,11 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ success: true, orderId: order.id });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Checkout error:", error);
+    const message = error instanceof Error ? error.message : "Có lỗi xảy ra trong quá trình đặt hàng";
     return NextResponse.json(
-      { error: error.message || "Có lỗi xảy ra trong quá trình đặt hàng" },
+      { error: message },
       { status: 400 }
     );
   }

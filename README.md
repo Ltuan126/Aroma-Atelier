@@ -167,7 +167,7 @@ http://localhost:3000
 * [x] Customer management (Admin)
 * [x] Search & advanced filtering
 * [x] Payment integration
-* [ ] Deployment (Vercel + managed DB)
+* [x] Deployment (Vercel + managed DB)
 
 ---
 

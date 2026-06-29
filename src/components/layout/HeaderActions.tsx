@@ -22,7 +22,7 @@ export default function HeaderActions() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const isAdmin = (session?.user as any)?.role === "ADMIN";
+  const isAdmin = session?.user?.role === "ADMIN";
 
   return (
     <div className="flex items-center space-x-4">

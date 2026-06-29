@@ -17,7 +17,7 @@ export async function PATCH(req: NextRequest, { params }: Context) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
     const body = await req.json();
     const { quantity } = body;
 
@@ -85,7 +85,7 @@ export async function DELETE(req: NextRequest, { params }: Context) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
 
     // Đảm bảo CartItem thuộc sở hữu của người dùng hiện tại
     const cartItem = await prisma.cartItem.findUnique({

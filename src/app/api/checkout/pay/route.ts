@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
     const body = await req.json();
     const { orderId, paymentMethod, success } = body;
 
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Đảm bảo đơn hàng thuộc về chính user hoặc admin
-    if (order.userId !== userId && (session.user as any).role !== "ADMIN") {
+    if (order.userId !== userId && session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -89,10 +89,11 @@ export async function POST(req: NextRequest) {
       success: true,
       order: updatedOrder,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Payment API error:", error);
+    const message = error instanceof Error ? error.message : "Có lỗi xảy ra khi xử lý thanh toán";
     return NextResponse.json(
-      { error: error.message || "Có lỗi xảy ra khi xử lý thanh toán" },
+      { error: message },
       { status: 500 }
     );
   }

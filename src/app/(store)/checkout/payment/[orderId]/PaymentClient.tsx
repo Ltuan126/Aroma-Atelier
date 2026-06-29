@@ -185,13 +185,13 @@ export default function PaymentClient({ order }: { order: Order }) {
           {/* Selector Tabs */}
           <div className="grid grid-cols-3 gap-3">
             {[
-              { id: "STRIPE", label: "Thẻ Tín Dụng", desc: "Giả lập Stripe", icon: "💳" },
-              { id: "QR", label: "Quét Mã QR", desc: "MoMo / VNPAY", icon: "📱" },
-              { id: "COD", label: "Khi Nhận Hàng", desc: "Ship COD", icon: "🚚" },
+              { id: "STRIPE" as const, label: "Thẻ Tín Dụng", desc: "Giả lập Stripe", icon: "💳" },
+              { id: "QR" as const, label: "Quét Mã QR", desc: "MoMo / VNPAY", icon: "📱" },
+              { id: "COD" as const, label: "Khi Nhận Hàng", desc: "Ship COD", icon: "🚚" },
             ].map((opt) => (
               <button
                 key={opt.id}
-                onClick={() => setMethod(opt.id as any)}
+                onClick={() => setMethod(opt.id)}
                 className={`p-4 rounded-2xl border text-center transition-all duration-300 flex flex-col items-center justify-center space-y-1.5 ${
                   method === opt.id
                     ? "bg-emerald-500/10 border-emerald-500 text-emerald-700 dark:text-emerald-400 font-semibold shadow-inner"

@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
     const session = await getServerSession(authOptions);
     
     // Kiểm tra quyền ADMIN
-    if (!session || (session.user as any).role !== "ADMIN") {
+    if (!session || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true, data: product }, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating product:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },

@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
     if (!userId) {
       return NextResponse.json({ error: "User ID not found in session" }, { status: 400 });
     }
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ success: true, cart: updatedCart });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Cart sync error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
